@@ -1,0 +1,6 @@
+[submodule "tools/densevid_eval"]
+	path = tools/densevid_eval
+	url = https://github.com/LuoweiZhou/densevid_eval_spice
+[submodule "tools/anet_entities"]
+	path = tools/anet_entities
+	url = https://github.com/facebookresearch/ActivityNet-Entities.git

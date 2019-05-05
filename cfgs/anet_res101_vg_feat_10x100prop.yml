@@ -1,0 +1,17 @@
+# dataset setting
+dataset: anet
+input_json: 'data/anet/cap_anet_trainval.json'
+input_dic: 'data/anet/dic_anet.json'
+input_raw_cap: 'data/anet/anet_captions_all_splits.json'
+seg_feature_root: 'data/anet/rgb_motion_1d'
+image_path: 'data/anet/frames_10frm' # for visualization only
+feature_root: 'data/anet/fc6_feat_100rois'
+proposal_h5: 'data/anet/anet_detection_vg_fc6_feat_100rois.h5'
+num_prop_per_frm: 100
+data_path: 'data'
+# language model
+att_model: topdown
+num_layers: 1
+seq_per_img: 1
+val_images_use: -1
+optim: 'adam'
