@@ -23,7 +23,6 @@ import random
 import string
 import sys
 import math
-import spacy
 import uuid
 import numpy as np
 

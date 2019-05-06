@@ -5,6 +5,9 @@
 # LICENSE file in the root directory of this source tree.
 #
 
+# install spacy and download the spacy English model:
+# https://github.com/pytorch/text#optional-requirements
+
 import json
 import os
 from stanfordcorenlp import StanfordCoreNLP
