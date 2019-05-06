@@ -204,6 +204,7 @@ def main():
     print('Number of classes are missing: {}, percentage: {}'.format(len(missed_cls),
           len(missed_cls)*1./len(g_class_dict)))
 
+    nlp.close()
 
 if __name__ == "__main__":
     main()
