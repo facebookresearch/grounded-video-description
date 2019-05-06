@@ -1,0 +1,35 @@
+Format of JSON Flickr30k-Entities annotation files
+
+### for flickr30k_cleaned_class.json
+-> vocab: the 480 object classes (not including the background class)
+-> annotations # list of dicts for images
+  -> [0]
+    - image_id: identifier of image
+    - image_size: width, height
+    -> captions: list of five dicts for captions
+      -> [0]
+        -> process_clss: object class of all the bounding boxes
+        -> tokens: tokenized sentence
+        -> process_idx: the index of the object class in the sentence
+        -> process_bnd_box: coordinate of all the bounding boxes
+        -> others including bbox_id, process_attr, bnd_box, process_bbox_id, word_idx, bbox_attr
+-> lemma2w
+
+### an example on grounding evaluation subsmission files
+```
+{
+  "results": {
+    "1": [
+           {
+           "clss": ["room", "woman", "she"], # object class
+           "idx_in_sent": [8, 2, 12], # index of object in the sentence
+           "bbox": [[1,2,3,4], [1,2,3,4], [1,2,3,4]]
+           }
+    ] # must contain five elements that correspond to the five images
+  },
+  "external_data": {
+    "used": true, # Boolean flag
+    "details": "Object detector pre-trained on Visual Genome on object detection task."
+  }
+}
+```
