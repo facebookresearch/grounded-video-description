@@ -113,10 +113,6 @@ Arguments: `references="./data/anet/anet_entities_val_1.json ./data/anet/anet_en
 You need at least 9GB of free GPU memory for the evaluation.
 
 
-## Visualization
-First, install cv2 using command `conda install -c menpo opencv`. Download the uniformly sampled frames (10 per segment) from [here](http://youcook2.eecs.umich.edu/static/dat/anet-entities-10-frames.tar.gz) and uncompress. We refer to this directory as `image_path`. During validation or testing, add the `--vis_attn` option and the visualization for randomly sampled segments will be placed under the `vis` directory.
-
-
 ## Reference
 Please acknowledge the following paper if you use the code:
 
@@ -124,7 +120,7 @@ Please acknowledge the following paper if you use the code:
 @inproceedings{zhou2019grounded,
   title={Grounded Video Description},
   author={Zhou, Luowei and Kalantidis, Yannis and Chen, Xinlei and Corso, Jason J and Rohrbach, Marcus},
-  journal={CVPR},
+  booktitle={CVPR},
   year={2019}
 }
 ```
