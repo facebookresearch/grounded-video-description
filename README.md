@@ -120,7 +120,7 @@ Please acknowledge the following paper if you use the code:
 @inproceedings{zhou2019grounded,
   title={Grounded Video Description},
   author={Zhou, Luowei and Kalantidis, Yannis and Chen, Xinlei and Corso, Jason J and Rohrbach, Marcus},
-  journal={CVPR},
+  booktitle={CVPR},
   year={2019}
 }
 ```
