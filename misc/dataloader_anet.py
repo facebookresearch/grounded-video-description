@@ -243,11 +243,11 @@ class DataLoader(data.Dataset):
             gt_bboxs[i, 6] = bbox['bbox_idx']
             gt_bboxs[i, 7] = bbox['idx']
 
-        gt_x = (gt_bboxs[:,2]-gt_bboxs[:,0]+1)
-        gt_y = (gt_bboxs[:,3]-gt_bboxs[:,1]+1)
-        gt_area_nonzero = (((gt_x != 1) & (gt_y != 1)))
-
-        gt_bboxs = gt_bboxs[gt_area_nonzero]
+        if not self.test_mode: # skip this in test mode
+            gt_x = (gt_bboxs[:,2]-gt_bboxs[:,0]+1)
+            gt_y = (gt_bboxs[:,3]-gt_bboxs[:,1]+1)
+            gt_area_nonzero = (((gt_x != 1) & (gt_y != 1)))
+            gt_bboxs = gt_bboxs[gt_area_nonzero]
 
         # given the bbox_ann, and caption, this function determine which word belongs to the detection.
         det_indicator = self.get_det_word(gt_bboxs, captions[0]['caption'], bbox_ann)

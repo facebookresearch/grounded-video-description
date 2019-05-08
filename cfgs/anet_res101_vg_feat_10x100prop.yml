@@ -1,6 +1,6 @@
 # dataset setting
 dataset: anet
-input_json: 'data/anet/cap_anet_trainval.json'
+input_json: 'data/anet/cap_anet.json'
 input_dic: 'data/anet/dic_anet.json'
 input_raw_cap: 'data/anet/anet_captions_all_splits.json'
 seg_feature_root: 'data/anet/rgb_motion_1d'
