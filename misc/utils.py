@@ -106,82 +106,6 @@ def decode_sequence(itow, itod, ltow, itoc, wtod, seq, vocab_size, opt):
     return out
 
 
-def decode_sequence_det(itow, itod, ltow, itoc, wtod, seq, bn_seq, fg_seq, vocab_size, opt):
-    N, D = seq.size()
-    det_idxs = []
-    det_words = []
-    out = []
-    for i in range(N):
-        txt = ''
-        for j in range(D):
-            if j >= 1:
-                txt = txt + ' '
-            ix = seq[i,j]
-            if ix > vocab_size:
-                det_word = itod[fg_seq[i,j]]
-                det_class = itoc[wtod[det_word]]
-                if opt.decode_noc and det_class in noc_object:
-                    det_word = det_class
-
-                if (bn_seq[i,j] == 1) and det_word in ltow:
-                    word = ltow[det_word]
-                else:
-                    word = det_word
-                word = '[ ' + word + ' ]'
-                det_words.append(word)
-                idx = ix - vocab_size - 1
-                det_idxs.append(idx)
-            else:
-                if ix == 0:
-                    break
-                else:
-                    word = itow[str(ix)]
-            txt = txt + word
-        out.append(txt)
-    return out, det_idxs, det_words
-
-
-def decode_normal(ix_to_word, seq):
-    N, D = seq.size()
-    out = []
-    for i in range(N):
-        txt = ''
-        for j in range(D):
-            ix = seq[i,j]
-            if ix > 0 :
-                if j >= 1:
-                    txt = txt + ' '
-                txt = txt + ix_to_word[str(ix)]
-            else:
-                break
-        out.append(txt)
-    return out
-
-def decode_sequence_bbox(itow, itod, ltow, seq, bn_seq, fg_seq, vocab_size, opt):
-    N, D = seq.size()
-    out = []
-    for i in range(N):
-        txt = ''
-        for j in range(D):
-            if j >= 1:
-                txt = txt + ' '
-            ix = seq[i,j]
-            if ix > vocab_size:
-                det_word = itod[fg_seq[i,j]]
-                if (bn_seq[i,j] == 1) and det_word in ltow:
-                    word = ltow[det_word]
-                else:
-                    word = det_word
-                # word = '[ ' + word + ' ]'
-            else:
-                if ix == 0:
-                    break
-                else:
-                    word = itow[str(ix)]
-            txt = txt + word
-        out.append(txt)
-
-
 def repackage_hidden(h, batch_size):
     """Wraps hidden states in new Variables, to detach them from their history."""
     if type(h) == Variable:
@@ -189,47 +113,6 @@ def repackage_hidden(h, batch_size):
     else:
         return tuple(repackage_hidden(v, batch_size) for v in h)
 
-# class RewardCriterion(nn.Module):
-#     def __init__(self):
-#         super(RewardCriterion, self).__init__()
-#
-#     def forward(self, input, seq, reward):
-#         input = input.view(-1)
-#         reward = reward.view(-1)
-#         mask = (seq>0).float().view(-1)
-#         output = - input * reward * Variable(mask)
-#         output = torch.sum(output) / torch.sum(mask)
-#
-#         # print(output)
-#         return output
-
-class RewardCriterion(nn.Module):
-    def __init__(self, opt):
-        super(RewardCriterion, self).__init__()
-        self.vocab_size = opt.vocab_size
-
-    def forward(self, seq, bn_seq, fg_seq, seqLogprobs, bnLogprobs, fgLogprobs, reward):
-
-        seqLogprobs = seqLogprobs.view(-1)
-        reward = reward.view(-1)
-        fg_seq = fg_seq.squeeze()
-        seq_mask = torch.cat((seq.new(seq.size(0),1).fill_(1).byte(), seq.gt(0)[:,:-1]),1).view(-1) #& fg_seq.eq(0)).view(-1)
-        seq_mask = Variable(seq_mask)
-        seq_out = - torch.masked_select(seqLogprobs * reward, seq_mask)
-        seq_out = torch.sum(seq_out) / torch.sum(seq_mask.data)
-
-        bnLogprobs = bnLogprobs.view(-1)
-        bn_mask = fg_seq.gt(0).view(-1)
-        bn_mask = Variable(bn_mask)
-
-        bn_out = - torch.masked_select(bnLogprobs * reward, bn_mask)
-        bn_out = torch.sum(bn_out) / max(torch.sum(bn_mask.data),1)
-
-        fgLogprobs = fgLogprobs.view(-1)
-        fg_out = - torch.masked_select(fgLogprobs * reward, bn_mask)
-        fg_out = torch.sum(fg_out) / max(torch.sum(bn_mask.data),1)
-
-        return seq_out, bn_out, fg_out
 
 class LMCriterion(nn.Module):
     def __init__(self, opt):
@@ -268,133 +151,10 @@ class LMCriterion(nn.Module):
 
         return loss, att2_loss, ground_loss
 
-class BNCriterion(nn.Module):
-    def __init__(self, opt):
-        super(BNCriterion, self).__init__()
-
-    def forward(self, input, target):
-
-        target = target.view(-1,1)-1
-        bn_mask = target.data.ne(-1)  # generate the mask
-        if isinstance(input, Variable):
-            bn_mask = Variable(bn_mask)
-
-        if torch.sum(bn_mask.data) > 0:
-            new_target = target.data.clone()
-            new_target[new_target<0] = 0
-            select = torch.gather(input.view(-1,2), 1, Variable(new_target))
-
-            out = - torch.masked_select(select, bn_mask)
-            loss = torch.sum(out) / torch.sum(bn_mask.data).float()
-        else:
-            loss = Variable(input.data.new(1).zero_()).float()
-
-        return loss
-
-class FGCriterion(nn.Module):
-    def __init__(self, opt):
-        super(FGCriterion, self).__init__()
-
-    def forward(self, input, target):
-
-        target = target.view(-1,1)
-        input = input.view(-1, input.size(2))
-
-        select = torch.gather(input, 1, target)
-
-        attr_mask = target.data.gt(0)  # generate the mask
-        if isinstance(input, Variable):
-            attr_mask = Variable(attr_mask)
-
-        if torch.sum(attr_mask.data) > 0:
-            out = - torch.masked_select(select, attr_mask)
-            loss = torch.sum(out) / torch.sum(attr_mask.data).float()
-        else:
-            loss = Variable(input.data.new(1).zero_()).float()
-
-        return loss
-
 
 def set_lr(optimizer, decay_factor):
     for group in optimizer.param_groups:
         group['lr'] = group['lr'] * decay_factor
-
-# def clip_gradient(optimizer, grad_clip):
-#     totalnorm = 0
-#     for p in model.parameters():
-#         if p.requires_grad:
-#             if p.grad is not None:
-#                 modulenorm = p.grad.data.norm()
-#                 totalnorm += modulenorm ** 2
-#     totalnorm = np.sqrt(totalnorm)
-
-#     norm = clip_norm / max(totalnorm, clip_norm)
-#     for p in model.parameters():
-#         if p.requires_grad:
-#             if p.grad is not None:
-#                 p.grad.mul_(norm)
-
-def clip_gradient(optimizer, grad_clip):
-    for group in optimizer.param_groups:
-        for param in group['params']:
-            if param.grad is not None:
-                param.grad.data.clamp_(-grad_clip, grad_clip)
-
-def noc_eval(pred, model_id, split, opt):
-    # first, we need to arrange the generated caption based on the novel object class.
-    # construct based on the class.
-    if not os.path.isdir('eval_results'):
-        os.mkdir('eval_results')
-    cache_path = os.path.join('eval_results/', 'noc_' + model_id + '_' + split + '.json')
-
-    gt_template_novel= '%s/coco_noc/annotations/'%(opt.data_path) + 'captions_split_set_%s_val_%s_novel2014.json'
-    gt_template_train= '%s/coco_noc/annotations/'%(opt.data_path) + 'captions_split_set_%s_val_%s_train2014.json' 
-    out = score_dcc(gt_template_novel, gt_template_train, pred, noc_object, split, cache_path)
-
-    return out
-
-def language_eval(dataset, preds, model_id, split, opt):
-    import sys
-    sys.path.append("tools/coco-caption")
-    if dataset == 'coco':
-        annFile = 'tools/coco-caption/annotations/captions_val2014.json'
-    elif dataset == 'flickr30k':
-        annFile = 'tools/coco-caption/annotations/caption_flickr30k.json'
-
-    from pycocotools.coco import COCO
-    from pycocoevalcap.eval import COCOEvalCap
-
-    if not os.path.isdir('eval_results'):
-        os.mkdir('eval_results')
-
-    cache_path = os.path.join('eval_results/', model_id + '_' + split + '.json')
-    coco = COCO(annFile)
-    valids = coco.getImgIds()
-
-    # filter results to only those in MSCOCO validation set (will be about a third)
-    preds_filt = [p for p in preds if p['image_id'] in valids]
-    print('using %d/%d predictions' % (len(preds_filt), len(preds)))
-    json.dump(preds_filt, open(cache_path, 'w')) # serialize to temporary json file. Sigh, COCO API...
-
-    cocoRes = coco.loadRes(cache_path)
-    cocoEval = COCOEvalCap(coco, cocoRes, 'corpus')
-    cocoEval.params['image_id'] = cocoRes.getImgIds()
-    cocoEval.evaluate()
-
-    # create output dictionary
-    out = {}
-    for metric, score in cocoEval.eval.items():
-        out[metric] = score
-    imgToEval = cocoEval.imgToEval
-
-    for p in preds_filt:
-        image_id, caption = p['image_id'], p['caption']
-        imgToEval[image_id]['caption'] = caption
-
-    with open(cache_path, 'w') as outfile:
-        json.dump({'overall': out, 'imgToEval': imgToEval}, outfile)
-
-    return out
 
 
 def crop(img, i, j, h, w):
@@ -412,6 +172,7 @@ def crop(img, i, j, h, w):
         raise TypeError('img should be PIL Image. Got {}'.format(type(img)))
 
     return img.crop((j, i, j + w, i + h))
+
 
 def pad(img, padding, fill=0):
     """Pad the given PIL Image on all sides with the given "pad" value.
@@ -440,6 +201,7 @@ def pad(img, padding, fill=0):
                          "{} element tuple".format(len(padding)))
 
     return ImageOps.expand(img, border=padding, fill=fill)
+
 
 class RandomCropWithBbox(object):
     """Crop the given PIL Image at a random location.

@@ -27,7 +27,6 @@ import json
 import math
 
 import opts
-import misc.eval_utils
 import misc.utils as utils
 import misc.AttModel as AttModel
 from collections import defaultdict

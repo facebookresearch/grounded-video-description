@@ -13,7 +13,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import *
-import misc.utils as utils
 from misc.model import AttModel
 from torch.nn.parameter import Parameter
 import pdb

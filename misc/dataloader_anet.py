@@ -19,7 +19,6 @@ from torchvision.datasets.folder import default_loader
 import torch
 import torch.utils.data as data
 import copy
-import misc.utils as utils
 from PIL import Image
 import torchvision.transforms as transforms
 import torchtext.vocab as vocab # use this to load glove vector
