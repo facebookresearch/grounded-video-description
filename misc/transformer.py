@@ -50,7 +50,7 @@ def positional_encodings_like(x, t=None):
     return Variable(encodings)
 
 def mask(targets, out):
-    mask = (targets != 1)
+    mask = (targets != 0)
     out_mask = mask.unsqueeze(-1).expand_as(out)
     return targets[mask], out[out_mask].view(-1, out.size(-1))
 
