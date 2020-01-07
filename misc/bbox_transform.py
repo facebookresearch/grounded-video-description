@@ -257,7 +257,8 @@ def bbox_overlaps_batch(anchors, gt_boxes, frm_mask=None):
 
         if frm_mask is not None:
             # proposal and gt should be on the same frame to overlap
-            frm_mask = ~frm_mask
+            # frm_mask = ~frm_mask # bitwise not (~) does not work with uint8 in pytorch 1.3
+            frm_mask = 1 - frm_mask
             # print('Percentage of proposals that are in the annotated frame: {}'.format(torch.mean(frm_mask.float())))
 
             overlaps = iw * ih / ua

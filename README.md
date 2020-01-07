@@ -46,6 +46,7 @@ MINICONDA_ROOT=[to your Miniconda root directory]
 conda env create -f cfgs/conda_env_gvd.yml --prefix $MINICONDA_ROOT/envs/gvd_pytorch1.1
 conda activate gvd_pytorch1.1
 ```
+Note that there have been some [breaking changes](https://github.com/pytorch/pytorch/releases/tag/v1.2.0) since PyTorch 1.2 (e.g., bitwise not on torch.bool/torch.uint8 and masked\_fill\_). This code base could potentially work with PyTorch 1.2+ with corresponding changes made.
 
 4) (Optional) If you choose to not use `download_all.sh`, be sure to install JAVA and download Stanford CoreNLP for SPICE (see [here](https://github.com/tylin/coco-caption)). Also, download and place the reference [file](https://github.com/jiasenlu/coco-caption/blob/master/annotations/caption_flickr30k.json) under `coco-caption/annotations`. Download [Stanford CoreNLP 3.9.1](https://stanfordnlp.github.io/CoreNLP/history.html) for grounding evaluation and place the uncompressed folder under the `tools` directory.
 

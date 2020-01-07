@@ -435,7 +435,7 @@ class AttModel(CaptionModel):
                     # use frame mask during training
                     box_mask = mask_boxes[:,0,:,i+1].contiguous().unsqueeze(1).expand((
                         batch_size, rois_num, mask_boxes.size(2)))
-                    frm_mask_on_prop = (torch.sum((~(box_mask | frm_mask)), dim=2)<=0)
+                    frm_mask_on_prop = (torch.sum((1 - (box_mask | frm_mask)), dim=2)<=0)
                     frm_mask_on_prop = torch.cat((frm_mask_on_prop.new(batch_size, 1).fill_(0.), \
                         frm_mask_on_prop), dim=1) | pnt_mask
                     output, state, att2_weight, att_h, max_grd_val, grd_val = self.core(xt, fc_feats, \
