@@ -78,7 +78,9 @@ CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7 python main.py --path_opt cfgs/anet_res101_
     --batch_size $batch_size --cuda --checkpoint_path save/$ID --id $ID --mGPUs \
     --language_eval | tee log/$ID
 ```
-Arguments: `batch_size=240`, `w_att2=0.05`, `w_grd=0`, `w_cls=0.1`, `ID` indicates the model name. (Optional) Remove `--mGPUs` to run in single-GPU mode.
+Arguments: `batch_size=240`, `w_att2=0.05`, `w_grd=0`, `w_cls=0.1`, `ID` indicates the model name.
+
+(Optional) Remove `--mGPUs` to run in single-GPU mode.
 
 ### Pre-trained Models
 The pre-trained models can be downloaded from [here (1.5GB)](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/pre-trained-models.tar.gz). Make sure you uncompress the file under the `save` directory (create one under the root directory if not exists).
@@ -108,7 +110,7 @@ python main.py --path_opt cfgs/anet_res101_vg_feat_10x100prop.yml --batch_size 1
 
 For unsupervised models (`ID=anet-unsup-0-0-0-run1`), simply remove the `--obj_interact` option.
 
-Arguments: `references="./data/anet/anet_entities_val_1.json ./data/anet/anet_entities_val_2.json"`, `val_split='validation'`. If you want to evaluate on the test split, set `val_split='testing'` and `references` accordingly and submit the object localization output files under `results` to the [eval server]().
+Arguments: `references="./data/anet/anet_entities_val_1.json ./data/anet/anet_entities_val_2.json"`, `val_split='validation'`. If you want to evaluate on the test split, set `val_split='testing'` and `references` accordingly and submit the object localization output files under `results` to the [eval server](https://competitions.codalab.org/competitions/20537).
 
 You need at least 9GB of free GPU memory for the evaluation.
 
