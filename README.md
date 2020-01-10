@@ -1,4 +1,7 @@
 # Grounded Video Description (flickr30k)
+
+### If you like this work, or image grounding and captioning in general, you might want to check out our recent work on vision-language pre-training ([VLP](https://github.com/LuoweiZhou/VLP))!
+
 This repo hosts the source code for our paper [Grounded Video Description](https://arxiv.org/pdf/1812.06587.pdf). It supports [Flickr30k-Entities](https://github.com/BryanPlummer/flickr30k_entities) dataset. We also have code that supports [ActivityNet-Entities](https://github.com/facebookresearch/ActivityNet-Entities) dataset, hosted at the [Master](https://github.com/facebookresearch/grounded-video-description) branch.
 
 
