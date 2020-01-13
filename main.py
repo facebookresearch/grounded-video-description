@@ -18,16 +18,14 @@ import numpy as np
 import random
 import time
 import os
-from six.moves import cPickle
+import pickle
 import torch.backends.cudnn as cudnn
 import yaml
 import copy
 import json
 
 import opts
-import misc.eval_utils
-import misc.utils as utils
-import misc.AttModel as AttModel
+from misc import utils, AttModel
 from collections import defaultdict
 
 import torchvision.transforms as transforms
@@ -546,8 +544,9 @@ if __name__ == '__main__':
             info_path = os.path.join(opt.start_from, 'infos_'+opt.id+'.pkl')
 
         # open old infos and check if models are compatible
-        with open(info_path) as f:
-            infos = cPickle.load(f)
+        with open(info_path, 'rb') as f:
+            infos = pickle.load(f, encoding='latin1') # py2 pickle -> py3
+            # infos = pickle.load(f)
             saved_model_opt = infos['opt']
 
         # opt.learning_rate = saved_model_opt.learning_rate
@@ -555,8 +554,9 @@ if __name__ == '__main__':
         model.load_state_dict(torch.load(model_path))
 
         if os.path.isfile(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl')):
-            with open(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl')) as f:
-                histories = cPickle.load(f)
+            with open(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl'), 'rb') as f:
+                histories = pickle.load(f, encoding='latin1') # py2 pickle -> py3
+                # histories = pickle.load(f)
 
     best_val_score = infos.get('best_val_score', None)
     iteration = infos.get('iter', 0)
@@ -646,9 +646,9 @@ if __name__ == '__main__':
             histories['lr_history'] = lr_history
             histories['ss_prob_history'] = ss_prob_history
             with open(os.path.join(opt.checkpoint_path, 'infos_'+opt.id+'.pkl'), 'wb') as f:
-                cPickle.dump(infos, f)
+                pickle.dump(infos, f)
             with open(os.path.join(opt.checkpoint_path, 'histories_'+opt.id+'.pkl'), 'wb') as f:
-                cPickle.dump(histories, f)
+                pickle.dump(histories, f)
 
             if best_flag:
                 checkpoint_path = os.path.join(opt.checkpoint_path, 'model-best.pth')
@@ -659,4 +659,4 @@ if __name__ == '__main__':
 
                 print("model saved to {} with best cider score {:.3f}".format(checkpoint_path, best_val_score))
                 with open(os.path.join(opt.checkpoint_path, 'infos_'+opt.id+'-best.pkl'), 'wb') as f:
-                    cPickle.dump(infos, f)
+                    pickle.dump(infos, f)

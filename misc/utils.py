@@ -364,7 +364,7 @@ def language_eval(dataset, preds, model_id, split, opt):
     json.dump(preds_filt, open(cache_path, 'w')) # serialize to temporary json file. Sigh, COCO API...
 
     cocoRes = coco.loadRes(cache_path)
-    cocoEval = COCOEvalCap(coco, cocoRes) # , 'corpus')
+    cocoEval = COCOEvalCap(coco, cocoRes, 'corpus')
     cocoEval.params['image_id'] = cocoRes.getImgIds()
     cocoEval.evaluate()
 

@@ -152,18 +152,18 @@ class AttModel(CaptionModel):
         # for p in self.embed[0].parameters(): p.requires_grad=False
 
         # weights transfer for fc7 layer
-        with open('data/detectron_weights/fc7_w.pkl') as f:
+        with open('data/detectron_weights/fc7_w.pkl', 'rb') as f:
             fc7_w = torch.from_numpy(pickle.load(f))
-        with open('data/detectron_weights/fc7_b.pkl') as f:
+        with open('data/detectron_weights/fc7_b.pkl', 'rb') as f:
             fc7_b = torch.from_numpy(pickle.load(f))
         self.ctx2pool_grd[0].weight[:self.att_feat_size].data.copy_(fc7_w)
         self.ctx2pool_grd[0].bias[:self.att_feat_size].data.copy_(fc7_b)
 
         if self.transfer_mode in ('cls', 'both'):
             # find nearest neighbour class for transfer
-            with open('data/detectron_weights/cls_score_w.pkl') as f:
+            with open('data/detectron_weights/cls_score_w.pkl', 'rb') as f:
                 cls_score_w = torch.from_numpy(pickle.load(f)) # 1601x2048
-            with open('data/detectron_weights/cls_score_b.pkl') as f:
+            with open('data/detectron_weights/cls_score_b.pkl', 'rb') as f:
                 cls_score_b = torch.from_numpy(pickle.load(f)) # 1601x2048
 
             assert(len(opt.itod)+1 == opt.glove_clss.size(0)) # index 0 is background
