@@ -143,7 +143,7 @@ class FlickrGrdEval(object):
                     idx_in_sent[cls] = idx_in_sent.get(cls, []) + [ann['process_idx'][box_idx]]
 
                 sent_idx = ann['process_idx'] # index of gt object words
-                exclude_obj = {json.loads(nlp.annotate(token.encode('utf-8'), properties=props) \
+                exclude_obj = {json.loads(nlp.annotate(token, properties=props) \
                     )['sentences'][0]['tokens'][0]['lemma']:1 for token_idx, token in enumerate(ann['tokens'] \
                     ) if (token_idx not in sent_idx and token != '')}
 
@@ -160,7 +160,7 @@ class FlickrGrdEval(object):
                         overlap = bbox_overlaps_batch(pred_bbox.unsqueeze(0), \
                             ref_bbox.unsqueeze(0).unsqueeze(0))
                         prec[class_name].append(1 if torch.max(overlap) > self.iou_thresh else 0)
-                    elif json.loads(nlp.annotate(class_name.encode('utf-8'), properties=props))['sentences'][0]['tokens'][0]['lemma'] in exclude_obj:
+                    elif json.loads(nlp.annotate(class_name, properties=props))['sentences'][0]['tokens'][0]['lemma'] in exclude_obj:
                         pass # do not penalize if gt object word not annotated (missed)
                     else:
                         if mode == 'all':
