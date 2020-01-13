@@ -40,7 +40,7 @@ sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
 
-# from evaluate import ANETcaptions
+from evaluate import ANETcaptions
 from eval_grd_anet_entities import ANetGrdEval
 
 
@@ -621,8 +621,8 @@ if __name__ == '__main__':
 
         # open old infos and check if models are compatible
         with open(info_path, 'rb') as f:
-            # infos = pickle.load(f, encoding='latin1') # py2 pickle -> py3
-            infos = pickle.load(f)
+            infos = pickle.load(f, encoding='latin1') # py2 pickle -> py3
+            # infos = pickle.load(f)
             saved_model_opt = infos['opt']
 
         # opt.learning_rate = saved_model_opt.learning_rate
@@ -631,8 +631,8 @@ if __name__ == '__main__':
 
         if os.path.isfile(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl')):
             with open(os.path.join(opt.start_from, 'histories_'+opt.id+'.pkl'), 'rb') as f:
-                # histories = pickle.load(f, encoding='latin1') # py2 pickle -> py3
-                histories = pickle.load(f)
+                histories = pickle.load(f, encoding='latin1') # py2 pickle -> py3
+                # histories = pickle.load(f)
 
     best_val_score = infos.get('best_val_score', None)
     iteration = infos.get('iter', 0)
