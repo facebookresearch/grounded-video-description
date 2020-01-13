@@ -40,15 +40,15 @@ Make sure all the submodules [densevid_eval](https://github.com/LuoweiZhou/dense
 
 2) Install CUDA 9.0 and CUDNN v7.1. Later versions should be fine, but might need to get the conda env file updated (e.g., for PyTorch).
 
-3) Install [Miniconda](https://conda.io/miniconda.html) (either Miniconda2 or 3, version 4.6+). We recommend using conda [environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to install required packages, including Python 2.7 or 3.7, [PyTorch 1.1.0](https://pytorch.org/get-started/locally/) etc.:
+3) Install [Miniconda](https://conda.io/miniconda.html) (either Miniconda2 or 3, version 4.6+). We recommend using conda [environment](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) to install required packages, including Python 3.7 or 2.7, [PyTorch 1.1.0](https://pytorch.org/get-started/locally/) etc.:
 ```
 MINICONDA_ROOT=[to your Miniconda root directory]
-conda env create -f cfgs/conda_env_gvd.yml --prefix $MINICONDA_ROOT/envs/gvd_pytorch1.1
+conda env create -f cfgs/conda_env_gvd_py3.yml --prefix $MINICONDA_ROOT/envs/gvd_pytorch1.1
 conda activate gvd_pytorch1.1
 ```
 Note that there have been some [breaking changes](https://github.com/pytorch/pytorch/releases/tag/v1.2.0) since PyTorch 1.2 (e.g., bitwise not on torch.bool/torch.uint8 and masked\_fill\_). This code base could potentially work with PyTorch 1.2+ with corresponding changes made.
 
-(Ongoing) Replace `cfgs/conda_env_gvd.yml` with `cfgs/conda_env_gvd_py3.yml` for Python 3.7.
+(Ongoing) Replace `cfgs/conda_env_gvd_py3.yml` with `cfgs/conda_env_gvd.yml` for Python 2.7.
 
 4) (Optional) If you choose to not use `download_all.sh`, be sure to install JAVA and download Stanford CoreNLP for SPICE (see [here](https://github.com/tylin/coco-caption)). Also, download and place the reference [file](https://github.com/jiasenlu/coco-caption/blob/master/annotations/caption_flickr30k.json) under `coco-caption/annotations`. Download [Stanford CoreNLP 3.9.1](https://stanfordnlp.github.io/CoreNLP/history.html) for grounding evaluation and place the uncompressed folder under the `tools` directory.
 
