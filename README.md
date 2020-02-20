@@ -1,4 +1,7 @@
 # Grounded Video Description
+
+### [ActivityNet Entities Object Localization (Grounding)](http://activity-net.org/challenges/2020/tasks/guest_anet_eol.html) will be one of the guest tasks in the official ActivityNet challange this year! Stay tuned for details.
+
 This repo hosts the source code for our paper [Grounded Video Description](https://arxiv.org/pdf/1812.06587.pdf). It supports [ActivityNet-Entities](https://github.com/facebookresearch/ActivityNet-Entities) dataset. We also have code that supports [Flickr30k-Entities](https://github.com/BryanPlummer/flickr30k_entities) dataset, hosted at the [flickr_branch](https://github.com/facebookresearch/grounded-video-description/tree/flickr_branch) branch.
 
 <img src='demo/gvid_teaser.png' alt="teaser results" width="80%"/>
@@ -48,7 +51,7 @@ conda activate gvd_pytorch1.1
 ```
 Note that there have been some [breaking changes](https://github.com/pytorch/pytorch/releases/tag/v1.2.0) since PyTorch 1.2 (e.g., bitwise not on torch.bool/torch.uint8 and masked\_fill\_). This code base could potentially work with PyTorch 1.2+ with corresponding changes made.
 
-(Ongoing) Replace `cfgs/conda_env_gvd_py3.yml` with `cfgs/conda_env_gvd.yml` for Python 2.7.
+Replace `cfgs/conda_env_gvd_py3.yml` with `cfgs/conda_env_gvd.yml` for Python 2.7.
 
 4) (Optional) If you choose to not use `download_all.sh`, be sure to install JAVA and download Stanford CoreNLP for SPICE (see [here](https://github.com/tylin/coco-caption)). Also, download and place the reference [file](https://github.com/jiasenlu/coco-caption/blob/master/annotations/caption_flickr30k.json) under `coco-caption/annotations`. Download [Stanford CoreNLP 3.9.1](https://stanfordnlp.github.io/CoreNLP/history.html) for grounding evaluation and place the uncompressed folder under the `tools` directory.
 
