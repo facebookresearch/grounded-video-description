@@ -1,6 +1,6 @@
 # Grounded Video Description
 
-### [ActivityNet Entities Object Localization (Grounding)](http://activity-net.org/challenges/2020/tasks/guest_anet_eol.html) will be one of the guest tasks in the official [ActivityNet challange](http://activity-net.org/challenges/2020/challenge.html) this year! Stay tuned for details.
+### [ActivityNet Entities Object Localization (Grounding) Challenge](http://activity-net.org/challenges/2020/tasks/guest_anet_eol.html) joins the official [ActivityNet Challenge](http://activity-net.org/challenges/2020/challenge.html) as a guest task this year! See [here](https://github.com/facebookresearch/ActivityNet-Entities#activitynet-entities-object-localization-challenge-2020) on how to participate.
 
 This repo hosts the source code for our paper [Grounded Video Description](https://arxiv.org/pdf/1812.06587.pdf). It supports [ActivityNet-Entities](https://github.com/facebookresearch/ActivityNet-Entities) dataset. We also have code that supports [Flickr30k-Entities](https://github.com/BryanPlummer/flickr30k_entities) dataset, hosted at the [flickr_branch](https://github.com/facebookresearch/grounded-video-description/tree/flickr_branch) branch.
 

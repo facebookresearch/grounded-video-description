@@ -14,7 +14,6 @@ import h5py
 import os
 import numpy as np
 import random
-from PIL import Image
 from torchvision.datasets.folder import default_loader
 import torch
 import torch.utils.data as data
