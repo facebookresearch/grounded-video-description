@@ -38,8 +38,7 @@ _SCRIPTPATH_ = os.path.dirname(os.path.abspath(__file__))
 import sys
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
-# sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
-sys.path.insert(0, os.path.join(_SCRIPTPATH_, '/z/home/luozhou/subsystem/archived/ActivityNet-Entities/scripts'))
+sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
 
 from evaluate import ANETcaptions
 from eval_grd_anet_entities import ANetGrdEval
