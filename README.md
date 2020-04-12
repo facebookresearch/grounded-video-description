@@ -57,9 +57,11 @@ Replace `cfgs/conda_env_gvd_py3.yml` with `cfgs/conda_env_gvd.yml` for Python 2.
 
 
 ## Data Preparation
+Updates (04/13/2020): The download links have been updated to include the **hidden** test set for the ANet-Entities Object Localization Challenge 2020.
+
 Download the preprocessed annotation files from [here](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_prep.tar.gz), uncompress and place them under `data/anet`. Or you can reproduce them all using the data from ActivityNet-Entities [repo](https://github.com/facebookresearch/ActivityNet-Entities) and the preprocessing script `prepro_dic_anet.py` under `prepro`. Then, download the ground-truth caption annotations (under our val/test splits) from [here](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_captions.tar.gz) and same place under `data/anet`.
 
-The region features and detections are available for download ([feature](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/fc6_feat_100rois.tar.gz) and [detection](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_detection_vg_fc6_feat_100rois.h5)). The region feature file should be decompressed and placed under your feature directory. We refer to the region feature directory as `feature_root` in the code. The H5 region detection (proposal) file is referred to as `proposal_h5` in the code.
+The region features and detections are available for download ([feature](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/fc6_feat_100rois.tar.gz) and [detection](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_detection_vg_fc6_feat_100rois.h5)). The region feature file should be decompressed and placed under your feature directory. We refer to the region feature directory as `feature_root` in the code. The H5 region detection (proposal) file is referred to as `proposal_h5` in the code. To extract feature for customized dataset (or brave folks for ANet-Entities as well), refer to the feature extraction tool [here](https://github.com/LuoweiZhou/detectron-vlp).
 
 The frame-wise appearance (with suffix `_resnet.npy`) and motion (with suffix `_bn.npy`) feature files are available [here](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/rgb_motion_1d.tar.gz). We refer to this directory as `seg_feature_root`.
 

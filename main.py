@@ -38,7 +38,8 @@ _SCRIPTPATH_ = os.path.dirname(os.path.abspath(__file__))
 import sys
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval'))
 sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/densevid_eval/coco-caption'))
-sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
+# sys.path.insert(0, os.path.join(_SCRIPTPATH_, 'tools/anet_entities/scripts'))
+sys.path.insert(0, os.path.join(_SCRIPTPATH_, '/z/home/luozhou/subsystem/archived/ActivityNet-Entities/scripts'))
 
 from evaluate import ANETcaptions
 from eval_grd_anet_entities import ANetGrdEval
@@ -435,8 +436,10 @@ def eval(epoch, opt, vis=None, vis_window=None):
     if opt.test_mode and (opt.eval_obj_grounding or opt.eval_obj_grounding_gt):
         print('*'*62)
         print('*  [WARNING] Grounding eval unavailable for the test set!\
-    *\n*            Please submit your results to the eval server!  *')
+    *\n*            Please submit your result files under directory *\
+     \n*            results/ to the eval server!                    *')
         print('*'*62)
+        return lang_stats
 
     if opt.eval_obj_grounding:
         # write attention results to file
@@ -451,9 +454,9 @@ def eval(epoch, opt, vis=None, vis_window=None):
                               iou_thresh=0.5)
 
         print('\nResults Summary (generated sent):')
-        print('Printing attention accuracy on generated sentences...')
-        prec_all, recall_all, f1_all = evaluator.grd_eval(mode='all')
-        prec_loc, recall_loc, f1_loc = evaluator.grd_eval(mode='loc')
+        print('Printing attention accuracy on generated sentences, per class and per sentence, respectively...')
+        prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, f1_all_per_sent = evaluator.grd_eval(mode='all')
+        prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, f1_loc_per_sent = evaluator.grd_eval(mode='loc')
 
     if opt.att_model == 'topdown' and opt.eval_obj_grounding_gt:
         with torch.no_grad():
@@ -516,7 +519,7 @@ if __name__ == '__main__':
         with open(opt.path_opt, 'r') as handle:
             options_yaml = yaml.load(handle)
         utils.update_values(options_yaml, vars(opt))
-    opt.test_mode = (opt.val_split == 'testing')
+    opt.test_mode = (opt.val_split in ['testing', 'hidden_test'])
     if opt.enable_BUTD:
         assert opt.att_input_mode == 'region', 'region attention only under the BUTD mode'
 
