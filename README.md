@@ -57,7 +57,7 @@ Replace `cfgs/conda_env_gvd_py3.yml` with `cfgs/conda_env_gvd.yml` for Python 2.
 
 
 ## Data Preparation
-Updates (04/13/2020): The download links have been updated to include the **hidden** test set for the ANet-Entities Object Localization Challenge 2020.
+Updates on 04/11/2020: Feature files for the **hidden** test set, used in ANet-Entities Object Localization Challenge 2020, will be available soon.
 
 Download the preprocessed annotation files from [here](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_prep.tar.gz), uncompress and place them under `data/anet`. Or you can reproduce them all using the data from ActivityNet-Entities [repo](https://github.com/facebookresearch/ActivityNet-Entities) and the preprocessing script `prepro_dic_anet.py` under `prepro`. Then, download the ground-truth caption annotations (under our val/test splits) from [here](https://dl.fbaipublicfiles.com/ActivityNet-Entities/ActivityNet-Entities/anet_entities_captions.tar.gz) and same place under `data/anet`.
 
