@@ -169,19 +169,29 @@ def eval_grounding(opt, vis=None):
             cls_accu_score[cls_accu_lst[i,0].long().item()].append(cls_accu_lst[i,1].item())
         print('Total number of object classes in the split: {}. {} have classification results.'.format(len(vocab_in_split), len(cls_accu_score)))
         cls_accu = np.sum([sum(hm)*1./len(hm) for i,hm in cls_accu_score.items()])*1./len(vocab_in_split)
+
+        # offline eval
+        evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
+                                  split_file=opt.split_file, val_split=[opt.val_split],
+                                  iou_thresh=0.5)
+
+        attn_accu = evaluator.gt_grd_eval()
+        evaluator.import_sub(grd_file)
+        grd_accu = evaluator.gt_grd_eval()
+
+        print('\nResults Summary (GT sent):')
+        print('The averaged attention / grounding box accuracy across all classes is: {:.4f} / {:.4f}'.format(attn_accu, grd_accu))
+        print('The averaged classification accuracy across all classes is: {:.4f}\n'.format(cls_accu))
+
+        return attn_accu, grd_accu, cls_accu
     else:
-        cls_accu = 0
+        print('*'*62)
+        print('*  [WARNING] Grounding eval unavailable for the test set!\
+    *\n*            Please submit your result files under directory *\
+     \n*            results/ to the eval server!                    *')
+        print('*'*62)
 
-    # offline eval
-    evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
-                              split_file=opt.split_file, val_split=[opt.val_split],
-                              iou_thresh=0.5)
-
-    attn_accu = evaluator.gt_grd_eval()
-    evaluator.import_sub(grd_file)
-    grd_accu = evaluator.gt_grd_eval()
-
-    return attn_accu, grd_accu, cls_accu
+        return 0, 0, 0
 
 
 def train(epoch, opt, vis=None, vis_window=None):
@@ -432,37 +442,32 @@ def eval(epoch, opt, vis=None, vis_window=None):
             print('{}: {:.3f}'.format(m, s*100))
         print('\n')
 
-    if opt.test_mode and (opt.eval_obj_grounding or opt.eval_obj_grounding_gt):
-        print('*'*62)
-        print('*  [WARNING] Grounding eval unavailable for the test set!\
-    *\n*            Please submit your result files under directory *\
-     \n*            results/ to the eval server!                    *')
-        print('*'*62)
-        return lang_stats
-
     if opt.eval_obj_grounding:
         # write attention results to file
         attn_file = 'results/attn-gen-sent-results-'+opt.val_split+'-'+opt.id+'.json'
         with open(attn_file, 'w') as f:
             json.dump({'results':grd_output, 'eval_mode':'gen', 'external_data':{'used':True, 'details':'Object detector pre-trained on Visual Genome on object detection task.'}}, f)
 
+        if not opt.test_mode:
+            # offline eval
+            evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
+                                  split_file=opt.split_file, val_split=[opt.val_split],
+                                  iou_thresh=0.5)
 
-        # offline eval
-        evaluator = ANetGrdEval(reference_file=opt.grd_reference, submission_file=attn_file,
-                              split_file=opt.split_file, val_split=[opt.val_split],
-                              iou_thresh=0.5)
-
-        print('\nResults Summary (generated sent):')
-        print('Printing attention accuracy on generated sentences, per class and per sentence, respectively...')
-        prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, f1_all_per_sent = evaluator.grd_eval(mode='all')
-        prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, f1_loc_per_sent = evaluator.grd_eval(mode='loc')
+            print('\nResults Summary (generated sent):')
+            print('Printing attention accuracy on generated sentences, per class and per sentence, respectively...')
+            prec_all, recall_all, f1_all, prec_all_per_sent, rec_all_per_sent, f1_all_per_sent = evaluator.grd_eval(mode='all')
+            prec_loc, recall_loc, f1_loc, prec_loc_per_sent, rec_loc_per_sent, f1_loc_per_sent = evaluator.grd_eval(mode='loc')
+        else:
+            print('*'*62)
+            print('*  [WARNING] Grounding eval unavailable for the test set!\
+    *\n*            Please submit your result files under directory *\
+     \n*            results/ to the eval server!                    *')
+            print('*'*62)
 
     if opt.att_model == 'topdown' and opt.eval_obj_grounding_gt:
         with torch.no_grad():
             box_accu_att, box_accu_grd, cls_accu = eval_grounding(opt) # eval grounding
-            print('\nResults Summary (GT sent):')
-            print('The averaged attention / grounding box accuracy across all classes is: {:.4f} / {:.4f}'.format(box_accu_att, box_accu_grd))
-            print('The averaged classification accuracy across all classes is: {:.4f}\n'.format(cls_accu))
     else:
         box_accu_att, box_accu_grd, cls_accu = 0, 0, 0
 
