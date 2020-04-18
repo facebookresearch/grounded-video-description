@@ -102,7 +102,7 @@ For supervised models (`ID=anet-sup-0.05-0-0.1-run1`):
 ```
 python main.py --path_opt cfgs/anet_res101_vg_feat_10x100prop.yml --batch_size 100 --cuda \
     --num_workers 6 --max_epoch 50 --inference_only --start_from save/$ID --id $ID \
-    --val_split $val_split --densecap_references $references --densecap_verbose --seq_length 20 \
+    --val_split $val_split --densecap_references $dc_references --densecap_verbose --seq_length 20 \
     --language_eval --eval_obj_grounding --obj_interact \
     | tee log/eval-$val_split-$ID-beam$beam_size-standard-inference
 ```
@@ -113,12 +113,12 @@ python main.py --path_opt cfgs/anet_res101_vg_feat_10x100prop.yml --batch_size 1
 python main.py --path_opt cfgs/anet_res101_vg_feat_10x100prop.yml --batch_size 100 --cuda \
     --num_workers 6 --max_epoch 50 --inference_only --start_from save/$ID --id $ID \
     --val_split $val_split --seq_length 40 --eval_obj_grounding_gt --obj_interact \
-    | tee log/eval-$val_split-$ID-beam$beam_size-gt-inference
+    --grd_reference $grd_reference | tee log/eval-$val_split-$ID-beam$beam_size-gt-inference
 ```
 
 For unsupervised models (`ID=anet-unsup-0-0-0-run1`), simply remove the `--obj_interact` option.
 
-Arguments: `references="./data/anet/anet_entities_val_1.json ./data/anet/anet_entities_val_2.json"`, `val_split='validation'`. If you want to evaluate on the test split, set `val_split='testing'` and `references` accordingly and submit the object localization output files under `results` to the [eval server](https://competitions.codalab.org/competitions/20537). Note that the eval server here is for general purposes. The servers designed for the CVPR'20 challenge is instead [here](https://github.com/facebookresearch/ActivityNet-Entities#evaluation-servers).
+Arguments: `dc_references='./data/anet/anet_entities_val_1.json ./data/anet/anet_entities_val_2.json'`, `grd_reference='tools/anet_entities/data/anet_entities_cleaned_class_thresh50_trainval.json'` `val_split='validation'`. If you want to evaluate on the test splits, set `val_split` to `'testing'` or `'hidden_test'`, `dc_references` (look for `anet_entities_test_1.json` and `anet_entities_test_2.json` and this only supports `'testing'`), and `grd_reference` (the skeleton files `*testing*.json` and `*hidden_test*.json`) accordingly. Then,submit the object localization output files under `results` to the [eval server](https://competitions.codalab.org/competitions/20537). Note that the eval server here is for general purposes. The servers designed for the CVPR'20 challenge is instead [here](https://github.com/facebookresearch/ActivityNet-Entities#evaluation-servers).
 
 You need at least 9GB of free GPU memory for the evaluation.
 

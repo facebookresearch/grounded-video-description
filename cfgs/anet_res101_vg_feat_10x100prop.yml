@@ -2,7 +2,6 @@
 dataset: anet
 input_json: 'data/anet/cap_anet_trainval.json'
 input_dic: 'data/anet/dic_anet.json'
-input_raw_cap: 'data/anet/anet_captions_all_splits.json'
 seg_feature_root: 'data/anet/rgb_motion_1d'
 image_path: 'data/anet/frames_10frm' # for visualization only
 feature_root: 'data/anet/fc6_feat_100rois'

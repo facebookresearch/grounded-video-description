@@ -18,8 +18,6 @@ def parse_opt():
                     help='path to the json file containing additional info and vocab')
     parser.add_argument('--input_dic', type=str, default='',
                     help='path to the json containing the preprocessed dataset')
-    parser.add_argument('--input_raw_cap', type=str, default='',
-                    help='path to ActivityNet Captions dataset file')
     parser.add_argument('--image_path', type=str, default='',
                     help='path to the h5file containing the image data') 
     parser.add_argument('--proposal_h5', type=str, default='',
