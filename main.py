@@ -187,8 +187,8 @@ def eval_grounding(opt, vis=None):
     else:
         print('*'*62)
         print('*  [WARNING] Grounding eval unavailable for the test set!\
-    *\n*            Please submit your result files under directory *\
-     \n*            results/ to the eval server!                    *')
+    *\n*            Please submit your result file named            *\
+     \n*            results/grd-gt-sent-*.json to the eval server!  *')
         print('*'*62)
 
         return 0, 0, 0
@@ -462,8 +462,8 @@ def eval(epoch, opt, vis=None, vis_window=None):
         else:
             print('*'*62)
             print('*  [WARNING] Grounding eval unavailable for the test set!\
-    *\n*            Please submit your result files under directory *\
-     \n*            results/ to the eval server!                    *')
+    *\n*            Please submit your result file named            *\
+     \n*            results/attn-gen-sent-*.json to the eval server!*')
             print('*'*62)
 
     if opt.att_model == 'topdown' and opt.eval_obj_grounding_gt:
