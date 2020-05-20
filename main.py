@@ -417,7 +417,7 @@ def eval(epoch, opt, vis=None, vis_window=None):
     if opt.language_eval:
         print('Total videos to be evaluated %d' %(len(predictions)))
 
-        submission = 'results/'+'densecap-'+opt.val_split+'-'+opt.id+'.json'
+        submission = 'densecap_results/'+'densecap-'+opt.val_split+'-'+opt.id+'.json'
         dense_cap_all = {'version':'VERSION 1.0', 'results':predictions,
                          'external_data':{'used':'true',
                           'details':'Visual Genome for Faster R-CNN pre-training'}}
